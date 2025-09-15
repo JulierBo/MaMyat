@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLBB စိန်များ ဝယ်ယူရန်</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --accent: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --warning: #f39c12;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+
+        .hero {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+            margin-bottom: 25px;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #ffcc00;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .product-desc {
+            margin-bottom: 15px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .buy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .buy-btn:hover {
+            background: #2980b9;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .submit-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #27ae60;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .payment-option img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 20px;
+            background: rgba(46, 204, 113, 0.2);
+            border-radius: 10px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .success-icon {
+            font-size: 50px;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .selected-product {
+            background: rgba(46, 204, 113, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .order-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .custom-order-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .price-preview {
+            background: rgba(46, 204, 113, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .error-message {
+            color: var(--accent);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: rgba(44, 62, 80, 0.95);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .sidebar-item {
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-item.active {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--secondary);
+        }
+
+        .sidebar-item i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .status-pending {
+            background-color: var(--warning);
+        }
+
+        .status-completed {
+            background-color: var(--secondary);
+        }
+
+        .admin-order-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .admin-controls {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .done-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .amount-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .amount-option {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .amount-option.selected {
+            background: var(--primary);
+        }
+
+        .amount-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .login-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .message-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .amount-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>MLBB စိန်များ</h2>
+        </div>
+        <div class="sidebar-menu">
+            <div class="sidebar-item active" data-page="homePage">
+                <i class="fas fa-home"></i>
+                <span>ပင်မစာမျက်နှာ</span>
+            </div>
+            <div class="sidebar-item" data-page="orderPage">
+                <i class="fas fa-history"></i>
+                <span>Order History</span>
+            </div>
+            <div class="sidebar-item" data-page="messagePage">
+                <i class="fas fa-envelope"></i>
+                <span>Message Admin</span>
+            </div>
+            <div class="sidebar-item" data-page="adminPage">
+                <i class="fas fa-user-cog"></i>
+                <span>Admin Panel</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h2>MLBB စိန်များ</h2>
+            <button class="submit-btn" id="menuBtn">
+                <i class="fas fa-bars"></i> မီနူး
+            </button>
+        </header>
+
+        <div class="page active" id="homePage">
+            <div class="hero">
+                <h1>Mobile Legends စိန်များ ဝယ်ယူရန်</h1>
+                <p>မြန်ဆန်စွာနှင့် စိတ်ချရသော စိန်ဝယ်ယူမှု ဝန်ဆောင်မှု</p>
+            </div>
+
+            <div class="custom-order-form">
+                <h2 style="text-align: center; margin-bottom: 20px;">ငွေပေးချေရန်</h2>
+
+                <div class="payment-option">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331966.png" alt="Wave Money">
+                    <div>
+                        <h3>Wave Money - Nine Nine</h3>
+                        <p>၀၉၆၇၃၅၈၅၄၈၀</p>
+                        <button class="copy-btn" onclick="copyPhoneNumber('09673585480')">နံပါတ်ကိုကူးယူရန်</button>
+                    </div>
+                </div>
+
+                <div class="payment-option">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331966.png" alt="KPay">
+                    <div>
+                        <h3>KPay - Ma May Phoo Wai</h3>
+                        <p>၀၉၆၇၈၇၈၆၅၂၈</p>
+                        <button class="copy-btn" onclick="copyPhoneNumber('09678786528')">နံပါတ်ကိုကူးယူရန်</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="custom-order-form">
+                <h2 style="text-align: center; margin-bottom: 20px;">စိန်အမျိုးအစား ရွေးချယ်ဝယ်ယူရန်</h2>
+
+                <div class="form-group">
+                    <label for="productType">စိန်အမျိုးအစား</label>
+                    <select id="productType">
+                        <option value="hala">Hala Coin</option>
+                        <option value="ximi">Ximi Diamond</option>
+                        <option value="hiyya">Hiyya</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="gameIdCustom">ဂိမ်း ID</label>
+                    <input type="text" id="gameIdCustom" placeholder="သင့်ဂိမ်း ID ထည့်ပါ" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="accountName">အကောင့်အမည်</label>
+                    <input type="text" id="accountName" placeholder="သင့်အကောင့်အမည် ထည့်ပါ" required>
+                </div>
+
+                <div class="form-group" id="amountGroup">
+                    <label for="amount">စိန်အရေအတွက်</label>
+                    <div class="amount-options" id="amountOptions">
+                        </div>
+                    <input type="number" id="amount" min="1" value="" required readonly>
+                    <div class="error-message" id="amountError">ကျေးဇူးပြု၍ မှန်ကန်သော စိန်အရေအတွက်ကို ထည့်သွင်းပါ။</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentScreenshot">ငွေလွှဲ Screenshot</label>
+                    <input type="file" id="paymentScreenshot" accept="image/*" required>
+                </div>
+
+                <div class="price-preview" id="pricePreview">
+                    <h3>စုစုပေါင်းဈေးနှုန်း: <span id="totalPrice">0</span> ကျပ်</h3>
+                </div>
+
+                <button class="submit-btn" id="placeOrderBtn">အော်ဒါတင်ရန်</button>
+            </div>
+        </div>
+
+        <div class="page" id="orderPage">
+            <h2 style="text-align: center; margin: 20px 0;">သင်၏ Order မှတ်တမ်း</h2>
+
+            <div id="orderHistory">
+                </div>
+        </div>
+
+        <div class="page" id="messagePage">
+            <h2 style="text-align: center; margin: 20px 0;">Admin သို့ Message ပို့ရန်</h2>
+
+            <div class="message-form">
+                <div class="form-group">
+                    <label for="messageGameId">ဂိမ်း ID</label>
+                    <input type="text" id="messageGameId" placeholder="သင့်ဂိမ်း ID ထည့်ပါ" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="messageAccountName">အကောင့်အမည်</label>
+                    <input type="text" id="messageAccountName" placeholder="သင့်အကောင့်အမည် ထည့်ပါ" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="messageOrderId">အော်ဒါနံပါတ်</label>
+                    <input type="text" id="messageOrderId" placeholder="သင့်အော်ဒါနံပါတ် ထည့်ပါ">
+                </div>
+
+                <div class="form-group">
+                    <label for="messageContent">Message</label>
+                    <textarea id="messageContent" rows="5" placeholder="သင့်စာကို ဤနေရာတွင် ရေးပါ..." required></textarea>
+                </div>
+
+                <button class="submit-btn" id="sendMessageBtn">Message ပို့ရန်</button>
+            </div>
+        </div>
+
+        <div class="page" id="adminPage">
+            <h2 style="text-align: center; margin: 20px 0;">Admin Panel</h2>
+
+            <div id="adminLoginForm" class="login-form">
+                <h3 style="text-align: center; margin-bottom: 20px;">Admin Login</h3>
+                <div class="form-group">
+                    <label for="adminPhone">ဖုန်းနံပါတ်</label>
+                    <input type="text" id="adminPhone" placeholder="ဖုန်းနံပါတ် ထည့်ပါ" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" placeholder="Password ထည့်ပါ" required>
+                </div>
+
+                <button class="submit-btn" id="adminLoginBtn">Login</button>
+            </div>
+
+            <div id="adminPanel" style="display: none;">
+                <h3 style="text-align: center; margin-bottom: 20px;">Orders</h3>
+                <div id="adminOrders">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <div id="modalContent">
+                <div class="success-message">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်!</h2>
+                    <p>သင့်အော်ဒါကို လက်ခံရရှိပြီး စီမံဆောင်ရွက်ပေးနေပါပြီ။</p>
+                    <p>အော်ဒါနံပါတ်: <strong id="orderNumber">ORD-003</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Telegram configuration (Add your own credentials here)
+        const TELEGRAM_BOT_TOKEN = '8379494427:AAF_X9P8kSE0Lj02kd-aLGR2vOcxA0Pvlt4';
+        const TELEGRAM_ADMIN_ID = '6437656033';
+        const TELEGRAM_GROUP_ID = '-1002915982616';
+
+        // Admin credentials (Set your own)
+        const ADMIN_PHONE = '09883155656';
+        const ADMIN_PASSWORD = 'myat151102';
+
+        // Product pricing
+        const productPricing = {
+            'hala': [
+                { amount: '2000', price: '1000' },
+                { amount: '4000', price: '2000' },
+                { amount: '6000', price: '3000' },
+                { amount: '8000', price: '4000' },
+                { amount: '10000', price: '5000' },
+                { amount: '20000', price: '10000' },
+                { amount: '110000', price: '50000' }
+            ],
+            'ximi': [
+                { amount: '6600', price: '5100' },
+                { amount: '13200', price: '10200' }
+            ],
+            'hiyya': [
+                { amount: '7200', price: '3000' },
+                { amount: '12000', price: '5000' },
+                { amount: '24000', price: '10000' }
+            ]
+        };
+
+        // Sidebar functionality
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Page navigation
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        const pages = document.querySelectorAll('.page');
+
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const targetPage = item.getAttribute('data-page');
+
+                // Update active page
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById(targetPage).classList.add('active');
+
+                // Update active sidebar item
+                sidebarItems.forEach(sidebarItem => {
+                    sidebarItem.classList.remove('active');
+                });
+                item.classList.add('active');
+
+                // Close sidebar on mobile
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+
+                // Load orders if going to order page
+                if (targetPage === 'orderPage') {
+                    loadOrderHistory();
+                } else if (targetPage === 'adminPage') {
+                    loadAdminOrders();
+                }
+            });
+        });
+
+        // Initialize product options
+        function initProductOptions() {
+            const productType = document.getElementById('productType');
+            productType.addEventListener('change', updateAmountOptions);
+            updateAmountOptions();
+        }
+
+        // Update amount options based on product type
+        function updateAmountOptions() {
+            const productType = document.getElementById('productType').value;
+            const amountOptions = document.getElementById('amountOptions');
+            const amountInput = document.getElementById('amount');
+            const totalPriceElement = document.getElementById('totalPrice');
+
+            // Clear existing options
+            amountOptions.innerHTML = '';
+
+            // Add new options based on product type
+            productPricing[productType].forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'amount-option';
+                optionElement.setAttribute('data-amount', option.amount);
+                optionElement.setAttribute('data-price', option.price);
+                optionElement.textContent = `${option.amount} Coin (${option.price} ကျပ်)`;
+
+                optionElement.addEventListener('click', () => {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.amount-option').forEach(opt => opt.classList.remove('selected'));
+
+                    // Add selected class to clicked option
+                    optionElement.classList.add('selected');
+
+                    // Update amount and price
+                    amountInput.value = option.amount;
+                    totalPriceElement.textContent = option.price;
+                });
+
+                amountOptions.appendChild(optionElement);
+            });
+
+            // Select first option by default
+            if (amountOptions.firstChild) {
+                amountOptions.firstChild.click();
+            }
+        }
+
+        // Order placement
+        const placeOrderBtn = document.getElementById('placeOrderBtn');
+        const orderModal = document.getElementById('orderModal');
+        const closeModal = document.getElementById('closeModal');
+
+        placeOrderBtn.addEventListener('click', () => {
+            // Validate form
+            const gameId = document.getElementById('gameIdCustom').value;
+            const accountName = document.getElementById('accountName').value;
+            const amount = document.getElementById('amount').value;
+            const productType = document.getElementById('productType').value;
+            const productTypeText = document.getElementById('productType').options[document.getElementById('productType').selectedIndex].text;
+            const price = document.getElementById('totalPrice').textContent;
+            const paymentScreenshot = document.getElementById('paymentScreenshot').files[0];
+
+            if (!gameId || !accountName || !amount || !paymentScreenshot) {
+                alert('ကျေးဇူးပြု၍ အကွက်လွတ်များအားလုံးကို ဖြည့်ပါ။');
+                return;
+            }
+
+            // Generate random order number
+            const orderNumber = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('orderNumber').textContent = orderNumber;
+
+            // Prepare order data
+            const orderData = {
+                orderNumber: orderNumber,
+                gameId: gameId,
+                accountName: accountName,
+                productType: productTypeText,
+                amount: amount,
+                price: price,
+                date: new Date().toLocaleDateString('my-MM'),
+                status: 'pending'
+            };
+
+            // Save order to localStorage
+            saveOrder(orderData);
+
+            // Send to Telegram (if credentials are set)
+            sendOrderToTelegram(orderData, paymentScreenshot);
+
+            // Show modal
+            orderModal.style.display = 'flex';
+        });
+
+        closeModal.addEventListener('click', () => {
+            orderModal.style.display = 'none';
+            // Reset form
+            document.getElementById('gameIdCustom').value = '';
+            document.getElementById('accountName').value = '';
+            document.getElementById('paymentScreenshot').value = '';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === orderModal) {
+                orderModal.style.display = 'none';
+                // Reset form
+                document.getElementById('gameIdCustom').value = '';
+                document.getElementById('accountName').value = '';
+                document.getElementById('paymentScreenshot').value = '';
+            }
+        });
+
+        // Copy phone number function
+        function copyPhoneNumber(number) {
+            navigator.clipboard.writeText(number)
+                .then(() => {
+                    alert('ဖုန်းနံပါတ် ကူးယူပြီးပါပြီ: ' + number);
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+        }
+
+        // Save order to localStorage
+        function saveOrder(orderData) {
+            try {
+                let orders = JSON.parse(localStorage.getItem('mlbb_orders')) || [];
+                orders.push(orderData);
+                localStorage.setItem('mlbb_orders', JSON.stringify(orders));
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+                // The alert is useful for debugging but can be removed in a live environment.
+                alert('သင့်ဘရောက်ဆာတွင် Local Storage အလုပ်မလုပ်ပါ၊ ကျေးဇူးပြု၍ Live Server သို့မဟုတ် GitHub Pages ဖြင့် ဖွင့်ပါ။');
+            }
+        }
+
+        // Load order history
+        function loadOrderHistory() {
+            try {
+                const orders = JSON.parse(localStorage.getItem('mlbb_orders')) || [];
+                const orderHistoryContainer = document.getElementById('orderHistory');
+
+                if (orders.length === 0) {
+                    orderHistoryContainer.innerHTML = '<p style="text-align: center;">မှာယူမှုများ မရှိသေးပါ။</p>';
+                    return;
+                }
+
+                orderHistoryContainer.innerHTML = '';
+
+                orders.forEach(order => {
+                    const orderItem = document.createElement('div');
+                    orderItem.className = 'order-item';
+
+                    orderItem.innerHTML = `
+                        <p><strong>အော်ဒါနံပါတ်:</strong> ${order.orderNumber}</p>
+                        <p><strong>ဂိမ်း ID:</strong> ${order.gameId}</p>
+                        <p><strong>အကောင့်အမည်:</strong> ${order.accountName}</p>
+                        <p><strong>ကုန်ပစ္စည်း:</strong> ${order.productType}</p>
+                        <p><strong>အရေအတွက်:</strong> ${order.amount}</p>
+                        <p><strong>ဈေးနှုန်း:</strong> ${order.price} ကျပ်</p>
+                        <p><strong>ရက်စွဲ:</strong> ${order.date}</p>
+                        <div class="order-status ${order.status === 'completed' ? 'status-completed' : 'status-pending'}">
+                            ${order.status === 'completed' ? 'ပြီးဆုံးပါပြီ' : 'စောင့်ဆိုင်းနေပါသည်'}
+                        </div>
+                    `;
+
+                    orderHistoryContainer.appendChild(orderItem);
+                });
+            } catch (error) {
+                console.error('Error loading from localStorage:', error);
+            }
+        }
+
+        // Admin login
+        document.getElementById('adminLoginBtn').addEventListener('click', () => {
+            const phone = document.getElementById('adminPhone').value;
+            const password = document.getElementById('adminPassword').value;
+
+            if (phone === ADMIN_PHONE && password === ADMIN_PASSWORD) {
+                document.getElementById('adminLoginForm').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadAdminOrders();
+            } else {
+                alert('ဖုန်းနံပါတ် (သို့) Password မှားယွင်းနေပါသည်။');
+            }
+        });
+
+        // Load admin orders
+        function loadAdminOrders() {
+            try {
+                const orders = JSON.parse(localStorage.getItem('mlbb_orders')) || [];
+                const adminOrdersContainer = document.getElementById('adminOrders');
+
+                if (orders.length === 0) {
+                    adminOrdersContainer.innerHTML = '<p style="text-align: center;">မှာယူမှုများ မရှိသေးပါ။</p>';
+                    return;
+                }
+
+                adminOrdersContainer.innerHTML = '';
+
+                orders.forEach((order, index) => {
+                    const orderItem = document.createElement('div');
+                    orderItem.className = 'admin-order-item';
+
+                    orderItem.innerHTML = `
+                        <p><strong>အော်ဒါနံပါတ်:</strong> ${order.orderNumber}</p>
+                        <p><strong>ဂိမ်း ID:</strong> ${order.gameId}</p>
+                        <p><strong>အကောင့်အမည်:</strong> ${order.accountName}</p>
+                        <p><strong>ကုန်ပစ္စည်း:</strong> ${order.productType}</p>
+                        <p><strong>အရေအတွက်:</strong> ${order.amount}</p>
+                        <p><strong>ဈေးနှုန်း:</strong> ${order.price} ကျပ်</p>
+                        <p><strong>ရက်စွဲ:</strong> ${order.date}</p>
+                        <div class="admin-controls">
+                            <button class="done-btn" data-index="${index}">Done</button>
+                        </div>
+                    `;
+
+                    adminOrdersContainer.appendChild(orderItem);
+                });
+
+                // Add event listeners to done buttons
+                document.querySelectorAll('.done-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const index = e.target.getAttribute('data-index');
+                        markOrderAsCompleted(index);
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading admin orders from localStorage:', error);
+            }
+        }
+
+        // Mark order as completed
+        function markOrderAsCompleted(index) {
+            try {
+                let orders = JSON.parse(localStorage.getItem('mlbb_orders')) || [];
+                if (orders[index]) {
+                    orders[index].status = 'completed';
+                    localStorage.setItem('mlbb_orders', JSON.stringify(orders));
+                    alert('Order ပြီးဆုံးကြောင်း အသိပေးချက် ပေးပို့ပြီးပါပြီ။');
+                    loadAdminOrders();
+                }
+            } catch (error) {
+                console.error('Error updating order in localStorage:', error);
+            }
+        }
+
+        // Send message to admin
+        document.getElementById('sendMessageBtn').addEventListener('click', () => {
+            const gameId = document.getElementById('messageGameId').value;
+            const accountName = document.getElementById('messageAccountName').value;
+            const orderId = document.getElementById('messageOrderId').value;
+            const message = document.getElementById('messageContent').value;
+
+            if (!gameId || !accountName || !message) {
+                alert('ကျေးဇူးပြု၍ အကွက်လွတ်များအားလုံးကို ဖြည့်ပါ။');
+                return;
+            }
+
+            const messageData = {
+                gameId: gameId,
+                accountName: accountName,
+                orderId: orderId,
+                message: message,
+                date: new Date().toLocaleString('my-MM')
+            };
+
+            // sendMessageToTelegram(messageData);
+
+            alert('Message ပို့ပြီးပါပြီ။');
+
+            // Reset form
+            document.getElementById('messageGameId').value = '';
+            document.getElementById('messageAccountName').value = '';
+            document.getElementById('messageOrderId').value = '';
+            document.getElementById('messageContent').value = '';
+        });
+
+        // Send order to Telegram (Placeholder function)
+        function sendOrderToTelegram(orderData, screenshotFile) {
+            console.log('Sending order to Telegram (functionality requires a valid bot token and chat ID)');
+            // You would use an API call here to send data to your bot.
+        }
+
+        // Send message to Telegram (Placeholder function)
+        function sendMessageToTelegram(messageData) {
+            console.log('Sending message to Telegram (functionality requires a valid bot token and chat ID)');
+            // You would use an API call here to send data to your bot.
+        }
+
+        // Initialize the page
+        window.addEventListener('DOMContentLoaded', () => {
+            initProductOptions();
+            loadOrderHistory();
+        });
+    </script>
+</body>
+  </html>
