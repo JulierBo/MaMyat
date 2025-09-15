@@ -671,12 +671,11 @@
     </div>
 
     <script>
-        // Telegram configuration (Add your own credentials here)
-        const TELEGRAM_BOT_TOKEN = '8379494427:AAF_X9P8kSE0Lj02kd-aLGR2vOcxA0Pvlt4';
-        const TELEGRAM_ADMIN_ID = '6437656033';
-        const TELEGRAM_GROUP_ID = '-1002915982616';
+        // Telegram configuration
+        const TELEGRAM_BOT_TOKEN = '7787880537:AAFfcgJ902qUPLrY-44gIYQ4MRj8oni7W1';
+        const TELEGRAM_GROUP_ID = '-1003072752274';
 
-        // Admin credentials (Set your own)
+        // Admin credentials
         const ADMIN_PHONE = '09883155656';
         const ADMIN_PASSWORD = 'myat151102';
 
@@ -835,7 +834,7 @@
             // Save order to localStorage
             saveOrder(orderData);
 
-            // Send to Telegram (if credentials are set)
+            // Send to Telegram
             sendOrderToTelegram(orderData, paymentScreenshot);
 
             // Show modal
@@ -880,7 +879,6 @@
                 localStorage.setItem('mlbb_orders', JSON.stringify(orders));
             } catch (error) {
                 console.error('Error saving to localStorage:', error);
-                // The alert is useful for debugging but can be removed in a live environment.
                 alert('သင့်ဘရောက်ဆာတွင် Local Storage အလုပ်မလုပ်ပါ၊ ကျေးဇူးပြု၍ Live Server သို့မဟုတ် GitHub Pages ဖြင့် ဖွင့်ပါ။');
             }
         }
@@ -1016,7 +1014,7 @@
                 date: new Date().toLocaleString('my-MM')
             };
 
-            // sendMessageToTelegram(messageData);
+            sendMessageToTelegram(messageData);
 
             alert('Message ပို့ပြီးပါပြီ။');
 
@@ -1027,16 +1025,65 @@
             document.getElementById('messageContent').value = '';
         });
 
-        // Send order to Telegram (Placeholder function)
-        function sendOrderToTelegram(orderData, screenshotFile) {
-            console.log('Sending order to Telegram (functionality requires a valid bot token and chat ID)');
-            // You would use an API call here to send data to your bot.
+        // Send order with screenshot to Telegram
+        async function sendOrderToTelegram(orderData, screenshotFile) {
+            const message = `🛒 အမှာစာအသစ်\n\n🆔 အော်ဒါနံပါတ်: ${orderData.orderNumber}\n🎮 ဂိမ်း ID: ${orderData.gameId}\n👤 အကောင့်အမည်: ${orderData.accountName}\n📦 ကုန်ပစ္စည်း: ${orderData.productType}\n🔢 အရေအတွက်: ${orderData.amount}\n💰 ဈေးနှုန်း: ${orderData.price} ကျပ်\n📅 ရက်စွဲ: ${orderData.date}`;
+
+            const formData = new FormData();
+            formData.append('chat_id', TELEGRAM_GROUP_ID);
+            formData.append('caption', message);
+            formData.append('photo', screenshotFile);
+
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                console.log('Telegram API response:', result);
+                if (result.ok) {
+                    console.log('Order sent to Telegram successfully');
+                } else {
+                    console.error('Error sending order to Telegram:', result.description);
+                    alert('အော်ဒါပို့ရာတွင် Error ဖြစ်သွားပါသည်။ ကျေးဇူးပြု၍ Admin ကို ဆက်သွယ်ပါ။');
+                }
+            } catch (error) {
+                console.error('Network error sending order to Telegram:', error);
+                alert('ကွန်ယက်ချိတ်ဆက်မှု ပြဿနာကြောင့် အော်ဒါပို့မရပါ။');
+            }
         }
 
-        // Send message to Telegram (Placeholder function)
-        function sendMessageToTelegram(messageData) {
-            console.log('Sending message to Telegram (functionality requires a valid bot token and chat ID)');
-            // You would use an API call here to send data to your bot.
+        // Send text message to Telegram
+        async function sendMessageToTelegram(messageData) {
+            const message = `📩 User Message\n\n🎮 ဂိမ်း ID: ${messageData.gameId}\n👤 အကောင့်အမည်: ${messageData.accountName}\n🆔 အော်ဒါနံပါတ်: ${messageData.orderId || 'N/A'}\n📝 Message: ${messageData.message}\n📅 ရက်စွဲ: ${messageData.date}`;
+
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_GROUP_ID,
+                        text: message
+                    })
+                });
+                const result = await response.json();
+                console.log('Telegram API response:', result);
+                if (result.ok) {
+                    console.log('Message sent to Telegram successfully');
+                } else {
+                    console.error('Error sending message to Telegram:', result.description);
+                    alert('Message ပို့ရာတွင် Error ဖြစ်သွားပါသည်။');
+                }
+            } catch (error) {
+                console.error('Network error sending message to Telegram:', error);
+                alert('ကွန်ယက်ချိတ်ဆက်မှု ပြဿနာကြောင့် message ပို့မရပါ။');
+            }
         }
 
         // Initialize the page
@@ -1046,4 +1093,4 @@
         });
     </script>
 </body>
-  </html>
+    </html>
